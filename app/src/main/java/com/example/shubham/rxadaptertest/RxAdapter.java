@@ -26,7 +26,7 @@ public class RxAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 10;
+        return 100;
     }
 
     @Override
@@ -41,13 +41,18 @@ public class RxAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, null);
+        View view;
+        if (convertView == null) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, null);
+        } else {
+            view = convertView;
+        }
         loadTextView(position, view.findViewById(R.id.text));
         return view;
     }
 
     private void loadTextView(final int position, final TextView tv) {
-       compositeDisposable.add(getObservable(position)
+        compositeDisposable.add(getObservable(position)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(integer -> tv.setText("" + integer), new Consumer<Throwable>() {
